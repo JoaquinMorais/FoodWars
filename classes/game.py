@@ -1,10 +1,14 @@
 import random
 from collections import Counter
 import matplotlib.pyplot as plt
+import os
 
 from classes.action import ActionType
 from classes.individue import Individues
 from classes.races.all import *
+
+def clear():
+    os.system("cls" if os.name == "nt" else "clear")
 
 class Game():
     def __init__(self,
@@ -14,8 +18,11 @@ class Game():
         self.trees:int = trees
         self.fruits:int = fruits
 
-        self.individues:list[Individues] = [Predator(),Predator(),Predator(),Vegans(),Vegans(),Vegans(),Vegans()]
+        self.individues:list[Individues] = []
         self.history = []
+        self.day = 0
+
+        self.races = [Prey(), Predator(), Human()]
 
         # MATRIZ DE RESULTADOS
         self.rules = {
@@ -125,7 +132,10 @@ class Game():
             for day in self.history:
                 values.append(day["count"].get(race, 0))
 
-            color = self.history[0]["colors"][race]
+            color = next(
+                (day["colors"][race] for day in self.history if race in day["colors"]),
+                "black"
+            )
 
             smooth_values = smooth(values)
 
@@ -138,6 +148,52 @@ class Game():
         plt.legend()
         plt.show()
 
+    def start(self):
+        clear()
+        print('Iniciando simulacion')
+        while True:
+            print(f'Dia {self.day}')
+            print(f'1) Simular')
+            print(f'2) Añadir Poblacion')
+            print(f'3) Reiniciar')
+            print(f'4) Graficar')
+            print(f'5) Salir')
+            n = str(input('>> '))
+            clear()
+            if n == '1':
+                print('Cuantos dias desea simular')
+                cant = input('>> ')
+                if cant.isnumeric():
+                    cant = int(cant)
+                    for i in range(cant):
+                        self.simulate_one_day()
+                    self.day += cant
+            elif n == '2':
+                cont = 1
+                for i in self.races:
+                    print(f'{cont}) {i.name}')
+                    cont += 1
+
+                race = input('>> ')
+                if race.isnumeric():
+                    race = int(race)
+                    if 1 <= race <= len(self.races):
+                        print('Cuanta cantidad agregar')
+                        cant = input('>> ')
+                        if cant.isnumeric():
+                            cant = int(cant)
+                            if cant >= 1:
+                                self.individues += [self.races[race-1].__class__() for x in range(cant)]
+            elif n == '3':
+                self.individues = []
+                self.history = []
+                self.day = 0
+
+            elif n == '4':
+                self.graph()
+            
+            elif n=='5':
+                break
 
 def smooth(values, window=20):
 

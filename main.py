@@ -8,6 +8,4 @@ print(ind.can_eat())
 print(ind.days_without_eating)"""
 
 game = Game()
-for i in range (1000):
-    game.simulate_one_day()
-game.graph()
+game.start()

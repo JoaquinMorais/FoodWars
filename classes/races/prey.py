@@ -1,13 +1,13 @@
 from classes.individue import Individues
 from classes.action import ActionType
 
-class Vegans(Individues):
+class Prey(Individues):
     def __init__(self):
         super().__init__(
             color =  "#4ABD00"
         )
 
-        self.name = "Vegans"
+        self.name = "Prey"
     
     def action(self, other:Individues = None) -> ActionType:
         return ActionType.SHARE
