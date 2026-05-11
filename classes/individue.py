@@ -1,9 +1,8 @@
-from abc import ABC, abstractmethod
 from __future__ import annotations
 import random
 from classes.action import ActionType
 
-class Individues(ABC):
+class Individues():
     def __init__(self, 
             reproduce:float = 1, 
             eat:float = 1.5,
@@ -24,6 +23,9 @@ class Individues(ABC):
         self.min_amount_eat_food:float = min_amount_eat_food
 
         self.max_days_without_eating:int = max_days_without_eating
+
+    def __repr__(self):
+        return f'{self.name}:{self.food}'
 
     def action(self, other:Individues) -> ActionType:
         pass
