@@ -4,7 +4,7 @@ from classes.action import ActionType
 
 class Individues():
     def __init__(self, 
-            reproduce:float = 1.5, 
+            reproduce:float = 2, 
             eat:float = 1.5,
             mutation_rate:float = 0,
             min_amount_reproduction_food:float = 0.5,
@@ -52,6 +52,9 @@ class Individues():
             child = self.__class__()
             child.food = 0
             child.days_without_eating = 0
+            child.reproduction_food = self.reproduction_food
+            child.eat_food = self.eat_food
+            child.mutation_rate = self.mutation_rate
             child.mutate()
 
             return child

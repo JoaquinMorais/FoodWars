@@ -4,7 +4,8 @@ from classes.action import ActionType
 class Prey(Individues):
     def __init__(self):
         super().__init__(
-            color =  "#4ABD00"
+            color =  "#4ABD00",
+            reproduce=1.5
         )
 
         self.name = "Prey"

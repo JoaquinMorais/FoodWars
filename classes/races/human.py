@@ -5,7 +5,6 @@ import random
 class Human(Individues):
     def __init__(self):
         super().__init__(
-            reproduce = 2,
             eat = 2,
             color = "#BABABA"
         )

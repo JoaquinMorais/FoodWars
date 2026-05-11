@@ -22,7 +22,7 @@ class Game():
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human()]
+        self.races = [Prey(), Predator(), Human(), Randomint()]
 
         # MATRIZ DE RESULTADOS
         self.rules = {
@@ -170,6 +170,7 @@ class Game():
                     self.day += cant
             elif n == '2':
                 cont = 1
+                print('0) Todos')
                 for i in self.races:
                     print(f'{cont}) {i.name}')
                     cont += 1
@@ -177,13 +178,17 @@ class Game():
                 race = input('>> ')
                 if race.isnumeric():
                     race = int(race)
-                    if 1 <= race <= len(self.races):
+                    if 0 <= race <= len(self.races):
                         print('Cuanta cantidad agregar')
                         cant = input('>> ')
                         if cant.isnumeric():
                             cant = int(cant)
                             if cant >= 1:
-                                self.individues += [self.races[race-1].__class__() for x in range(cant)]
+                                if race != 0:
+                                    self.individues += [self.races[race-1].__class__() for x in range(cant)]
+                                else:
+                                    for j in self.races:
+                                        self.individues += [j.__class__() for x in range(cant)]
             elif n == '3':
                 self.individues = []
                 self.history = []
