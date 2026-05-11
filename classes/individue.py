@@ -1,17 +1,63 @@
 from abc import ABC, abstractmethod
+from __future__ import annotations
+import random
+from classes.action import ActionType
 
 class Individues(ABC):
-    def __init__(self, reproduce:float = 1.5, survival:float = 1):
+    def __init__(self, 
+            reproduce:float = 1, 
+            eat:float = 1.5,
+            mutation_rate:float = 0,
+            min_amount_reproduction_food:float = 0.5,
+            min_amount_eat_food:float = 0.5,
+            max_days_without_eating:int = 2
+        ):
         self.name = 'base'
         self.food:float = 0
+        self.days_without_eating:int = 0
+
         self.reproduction_food:float = reproduce
-        self.survival_food:float = survival
+        self.eat_food:float = eat
+        self.mutation_rate:float = mutation_rate
 
+        self.min_amount_reproduction_food:float = min_amount_reproduction_food
+        self.min_amount_eat_food:float = min_amount_eat_food
 
-    def can_survive(self) -> bool:
-        return self.food >= self.survival_food()
+        self.max_days_without_eating:int = max_days_without_eating
+
+    def action(self, other:Individues) -> ActionType:
+        pass
+
+    def eat(self):
+        if self.can_eat:
+            self.food -= self.eat_food
+            self.days_without_eating = 0
+        else:
+            self.days_without_eating +=1
+
+    def survive(self) -> bool:
+        if self.days_without_eating >= self.max_days_without_eating:
+            return False
+        return True
+
+    def reproduce(self):
+        self.food -= self.reproduction_food 
+    
+    def mutate(self):
+        if self.mutation_rate > 0:
+            x = random.random()
+            if x < self.mutation_rate:
+                self.reproduction_food = max(self.get_mutation(self.reproduction_food), self.min_amount_reproduction_food)
+                self.eat_food = max(self.get_mutation(self.eat_food), self.min_amount_eat_food)
+                self.mutation_rate = max(self.get_mutation(self.mutation_rate),0)
+
+    def can_eat(self) -> bool:
+        return self.food >= self.eat_food()
     
     def can_reproduce(self) -> bool:
         return self.food >= self.reproduction_food()
     
+    def get_mutation(self, actual_amount, max_amount = 4) -> float:
+        x = random.uniform(-self.mutation_rate, self.mutation_rate) * random.randint(1,max_amount)
+        return actual_amount*(1+x)
 

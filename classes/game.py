@@ -1,5 +1,6 @@
 from classes.action import ActionType
 from classes.individue import Individues
+from classes.races.all import *
 
 class Game():
     def __init__(self,
@@ -9,7 +10,7 @@ class Game():
         self.trees:int = trees
         self.fruits:int = fruits
 
-        self.individues:list[Individues] = []
+        self.individues:list[Individues] = [Predator()]
 
         # MATRIZ DE RESULTADOS
         self.rules = {
@@ -35,4 +36,6 @@ class Game():
         for tree in range(self.trees):
             if len(individues_actives) == 0:
                 break 
+            
+            
 
