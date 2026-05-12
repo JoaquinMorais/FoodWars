@@ -19,10 +19,14 @@ class Game():
         self.fruits:int = fruits
 
         self.individues:list[Individues] = []
+        """for i in range(10):
+            self.individues.append(Prey())
+            self.individues.append(Predator())
+            self.individues.append(Bee())"""
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human(), Randomint(), Ant]
+        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee()]
 
         # MATRIZ DE RESULTADOS
         self.rules = {

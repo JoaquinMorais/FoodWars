@@ -21,14 +21,14 @@ class Ant(Individues):
         if ant_type == AntType.QUEEN:
             n = random.randint(8,12)
 
-            reproduce = n-2
+            reproduce = n-4
             eat_food = 4
             mutation_rate = 0
             max_days_without_eating = 3
             number_children = n
         else:
             reproduce = 100
-            eat_food = 0.8
+            eat_food = 1
             mutation_rate = 0
             max_days_without_eating:int = 1
             number_children = 0
