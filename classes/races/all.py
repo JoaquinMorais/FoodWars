@@ -4,7 +4,7 @@ from classes.races.human import Human
 from classes.races.randomint import Randomint
 from classes.races.ant import Ant, AntType
 from classes.races.bee import Bee
-
+from classes.races.mimic import Mimic
 
 __all__ = [
     "Predator",
@@ -13,5 +13,6 @@ __all__ = [
     "Randomint",
     "Ant",
     "AntType",
-    "Bee"
+    "Bee",
+    "Mimic"
 ]

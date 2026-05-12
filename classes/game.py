@@ -26,7 +26,7 @@ class Game():
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee()]
+        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee(), Mimic()]
 
         # MATRIZ DE RESULTADOS
         self.rules = {
