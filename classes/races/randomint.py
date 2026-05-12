@@ -5,7 +5,7 @@ import random
 class Randomint(Individues):
     def __init__(self):
         super().__init__(
-            color = "#6BBFAA"
+            color = "#382323"
         )
 
         self.name = "Randomint"

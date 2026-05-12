@@ -5,11 +5,12 @@ from classes.action import ActionType
 class Individues():
     def __init__(self, 
             reproduce:float = 2, 
-            eat:float = 1.5,
+            eat_food:float = 1.5,
             mutation_rate:float = 0,
             min_amount_reproduction_food:float = 0.5,
             min_amount_eat_food:float = 0.5,
             max_days_without_eating:int = 2,
+            number_children:int = 1,
             color:str = "#ff0000"
         ):
         self.name = 'base'
@@ -17,7 +18,7 @@ class Individues():
         self.days_without_eating:int = 0
 
         self.reproduction_food:float = reproduce
-        self.eat_food:float = eat
+        self.eat_food:float = eat_food
         self.mutation_rate:float = mutation_rate
 
         self.min_amount_reproduction_food:float = min_amount_reproduction_food
@@ -25,7 +26,10 @@ class Individues():
 
         self.max_days_without_eating:int = max_days_without_eating
 
+        self.number_children:int = number_children
+
         self.color = color
+
     
     def __repr__(self):
         return f'{self.name}:{self.food}'
@@ -35,8 +39,13 @@ class Individues():
 
     def eat(self):
         if self.can_eat():
-            self.food -= self.eat_food
-            self.days_without_eating = 0
+            if self.days_without_eating+1 >= self.max_days_without_eating:
+                
+                #print(f'ÑAM ÑAM ÑAM ÑAM {self.days_without_eating}/{self.max_days_without_eating}')
+                self.food -= self.eat_food
+                self.days_without_eating = 0
+            else:
+                self.days_without_eating +=1
         else:
             self.days_without_eating +=1
             
@@ -46,18 +55,19 @@ class Individues():
         return True
 
     def reproduce(self):
-        if self.can_reproduce():
+        if self.can_reproduce() and self.days_without_eating == 0:
             self.food -= self.reproduction_food
-
-            child = self.__class__()
-            child.food = 0
-            child.days_without_eating = 0
-            child.reproduction_food = self.reproduction_food
-            child.eat_food = self.eat_food
-            child.mutation_rate = self.mutation_rate
-            child.mutate()
-
-            return child
+            childs = []
+            for i in range(self.number_children):
+                child = self.__class__()
+                child.food = 0
+                child.days_without_eating = 0
+                child.reproduction_food = self.reproduction_food
+                child.eat_food = self.eat_food
+                child.mutation_rate = self.mutation_rate
+                child.mutate()
+                childs.append(child)
+            return childs
         else:
             return None
     

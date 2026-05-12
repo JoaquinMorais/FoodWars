@@ -22,15 +22,20 @@ class Game():
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human(), Randomint()]
+        self.races = [Prey(), Predator(), Human(), Randomint(), Ant]
 
         # MATRIZ DE RESULTADOS
         self.rules = {
-            
             (ActionType.SHARE, ActionType.SHARE): (0.5, 0.5),
             (ActionType.STEAL, ActionType.SHARE): (0.75, 0.25),
             (ActionType.SHARE, ActionType.STEAL): (0.25, 0.75),
             (ActionType.STEAL, ActionType.STEAL): (0, 0),
+
+            (ActionType.GIVE_ALL, ActionType.GIVE_ALL): (0, 0),
+            (ActionType.GIVE_ALL, ActionType.SHARE): (0, 1),
+            (ActionType.SHARE, ActionType.GIVE_ALL): (1, 0),
+            (ActionType.GIVE_ALL, ActionType.STEAL): (0, 1),
+            (ActionType.STEAL, ActionType.GIVE_ALL): (1, 0),
         }
 
 
@@ -92,9 +97,9 @@ class Game():
 
             individue.eat()
 
-            son = individue.reproduce()
-            if son is not None:
-                new_population.append(son)
+            sons = individue.reproduce()
+            if sons is not None:
+                new_population += sons
 
             survive = individue.survive()
             if survive:
@@ -124,7 +129,6 @@ class Game():
         for day in self.history:
             all_races.update(day["count"].keys())
 
-
         for race in all_races:
 
             values = []
@@ -141,11 +145,21 @@ class Game():
 
             plt.plot(
                 smooth_values,
-                label=race,
                 color=color
             )
 
-        plt.legend()
+            final_value = values[-1]
+
+            plt.text(
+                len(smooth_values) + 1,
+                smooth_values[-1],
+                f"{race} ({final_value})",
+                fontsize=8,
+                color=color
+            )
+
+        plt.xlim(right=len(self.history) + 15)
+
         plt.show()
 
     def start(self):
@@ -157,7 +171,8 @@ class Game():
             print(f'2) Añadir Poblacion')
             print(f'3) Reiniciar')
             print(f'4) Graficar')
-            print(f'5) Salir')
+            print(f'5) Mostrar individuos')
+            print(f'6) Salir')
             n = str(input('>> '))
             clear()
             if n == '1':
@@ -184,21 +199,55 @@ class Game():
                         if cant.isnumeric():
                             cant = int(cant)
                             if cant >= 1:
-                                if race != 0:
+                                if race == 5:
+                                    self.append_ant(cant)
+                                elif race != 0:
                                     self.individues += [self.races[race-1].__class__() for x in range(cant)]
                                 else:
                                     for j in self.races:
-                                        self.individues += [j.__class__() for x in range(cant)]
+                                        if j == Ant:
+                                            self.append_ant(cant)
+                                        else:
+                                            self.individues += [
+                                                j.__class__()
+                                                for x in range(cant)
+                                            ]                                        
             elif n == '3':
                 self.individues = []
                 self.history = []
                 self.day = 0
+                Ant.total_ants = 0
 
             elif n == '4':
                 self.graph()
             
-            elif n=='5':
+            elif n == '5':
+                cont = 1
+                for i in self.individues:
+                    print(f'{cont}- {i}')
+                    cont += 1
+                input('')
+            
+            elif n=='6':
                 break
+    
+
+    def append_ant(self, cant:int):
+        if cant <= 0:
+            return
+        ant_type = AntType.QUEEN
+        self.individues.append(Ant(ant_type=ant_type))
+        for i in range(cant-1):
+            x = random.random()
+            if x < 0.10:
+                ant_type = AntType.WARRIOR
+            elif x < 0.20:
+                ant_type = AntType.DEFENSIVE
+            elif x < 0.99:
+                ant_type = AntType.WORKER
+            else:
+                ant_type = AntType.QUEEN
+            self.individues.append(Ant(ant_type=ant_type))
 
 def smooth(values, window=20):
 
