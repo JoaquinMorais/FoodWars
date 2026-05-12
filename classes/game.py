@@ -19,14 +19,14 @@ class Game():
         self.fruits:int = fruits
 
         self.individues:list[Individues] = []
-        for i in range(10):
+        """for i in range(10):
             self.individues.append(Human())
             self.individues.append(Predator())
-            self.individues.append(Dog())
+            self.individues.append(Dog())"""
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee(), Mimic(), Dog()]
+        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee(), Mimic(), Dog(), Viltrumite()]
 
         # MATRIZ DE RESULTADOS
         self.rules = {
@@ -127,45 +127,53 @@ class Game():
             "colors": race_colors
         })
 
-    def graph(self):
+    def graph(self, start=0, end=None, smoothed=False):
+        if end is None:
+            end = len(self.history)
+
+        history = self.history[start:end]
+
         all_races = set()
 
-        for day in self.history:
+        for day in history:
             all_races.update(day["count"].keys())
 
         for race in all_races:
 
             values = []
 
-            for day in self.history:
+            for day in history:
                 values.append(day["count"].get(race, 0))
 
             color = next(
-                (day["colors"][race] for day in self.history if race in day["colors"]),
+                (day["colors"][race] for day in history if race in day["colors"]),
                 "black"
             )
 
-            smooth_values = smooth(values)
+            final_values = smooth(values) if smoothed else values
+
+            x = list(range(start, start + len(final_values)))
 
             plt.plot(
-                smooth_values,
+                x,
+                final_values,
                 color=color
             )
 
             final_value = values[-1]
 
             plt.text(
-                len(smooth_values) + 1,
-                smooth_values[-1],
+                x[-1] + 1,
+                final_values[-1],
                 f"{race} ({final_value})",
                 fontsize=8,
                 color=color
             )
 
-        plt.xlim(right=len(self.history) + 15)
+        plt.xlim(right=end + 15)
 
         plt.show()
-
+        
     def start(self):
         clear()
         print('Iniciando simulacion')
@@ -176,17 +184,20 @@ class Game():
             print(f'3) Reiniciar')
             print(f'4) Graficar')
             print(f'5) Mostrar individuos')
-            print(f'6) Salir')
+            print(f'6) Mostrar razas')
+            print(f'7) Salir')
             n = str(input('>> '))
             clear()
             if n == '1':
                 print('Cuantos dias desea simular')
                 cant = input('>> ')
+                initial_day = self.day
                 if cant.isnumeric():
                     cant = int(cant)
                     for i in range(cant):
                         self.simulate_one_day()
                     self.day += cant
+                    self.graph(start=initial_day)
             elif n == '2':
                 cont = 1
                 print('0) Todos')
@@ -232,7 +243,38 @@ class Game():
                     cont += 1
                 input('')
             
-            elif n=='6':
+            elif n == '6':
+                actual_races = {}
+                for i in self.individues:
+                    if i.name in actual_races:
+                        actual_races[i.name]['food'] += i.food
+                        actual_races[i.name]['eat_food'] += i.eat_food
+                        actual_races[i.name]['days_wtout_eat'] += i.days_without_eating
+                        actual_races[i.name]['repr_food'] += i.reproduction_food
+                        actual_races[i.name]['mut_rate'] += i.mutation_rate
+                        actual_races[i.name]['childrens'] += i.number_children
+                        actual_races[i.name]['quantity'] += 1
+                    else:
+                        actual_races[i.name] = {
+                            'food':i.food,
+                            'eat_food':i.eat_food,
+                            'days_wtout_eat':i.days_without_eating,
+                            "repr_food":i.reproduction_food,
+                            "mut_rate":i.mutation_rate,
+                            "childrens" :i.number_children,
+                            "quantity":1
+                        }
+                for i in actual_races:
+                    data = [
+                        f"{x}:{round(actual_races[i][x]/actual_races[i]['quantity'],2)}"
+                        if x != 'quantity'
+                        else f"{x}:{actual_races[i][x]}"
+                        for x in actual_races[i]
+                    ]
+                    print(f"{i}: {'|'.join(data)}")
+                input('')
+            
+            elif n=='7':
                 break
     
 

@@ -6,7 +6,7 @@ class Human(Individues):
     def __init__(self):
         super().__init__(
             reproduce= 2.5,
-            color = "#BABABA"
+            color = "#4747B3"
         )
 
         self.name = "Human"

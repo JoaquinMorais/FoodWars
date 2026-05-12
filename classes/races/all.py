@@ -6,7 +6,7 @@ from classes.races.ant import Ant, AntType
 from classes.races.bee import Bee
 from classes.races.mimic import Mimic
 from classes.races.dog import Dog
-
+from classes.races.viltrumite import Viltrumite
 
 __all__ = [
     "Predator",
@@ -17,5 +17,6 @@ __all__ = [
     "AntType",
     "Bee",
     "Mimic",
-    "Dog"
+    "Dog",
+    "Viltrumite"
 ]
