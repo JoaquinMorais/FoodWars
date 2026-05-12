@@ -5,7 +5,7 @@ class Prey(Individues):
     def __init__(self):
         super().__init__(
             color =  "#4ABD00",
-            reproduce=1.75
+            reproduce=1.5
         )
 
         self.name = "Prey"

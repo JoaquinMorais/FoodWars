@@ -5,7 +5,7 @@ from classes.action import ActionType
 class Individues():
     def __init__(self, 
             reproduce:float = 2, 
-            eat_food:float = 1.5,
+            eat_food:float = 1.75,
             mutation_rate:float = 0,
             min_amount_reproduction_food:float = 0.5,
             min_amount_eat_food:float = 0.5,
