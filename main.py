@@ -17,7 +17,7 @@ from classes.races.neural import NeuralBrain
 if os.path.exists("mejor_cerebro.json"):
     cerebro = NeuralBrain.cargar("mejor_cerebro.json")
     print("Usando cerebro entrenado")
-    for _ in range(5):
+    for _ in range(3):
         game.individues.append(Neural(brain=cerebro.mutar()))
 else:
     print("No hay cerebro entrenado, usando random")

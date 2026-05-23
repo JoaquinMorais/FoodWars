@@ -25,6 +25,11 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
     else:
         cerebros = [NeuralBrain().__class__() for _ in range(poblacion)]
 
+    with open("log.txt", "w", encoding="utf-8") as f:
+        f.write("Nuevo entrenamiento\n")
+        f.write(f"Generaciones: {generaciones} - Poblacion: {poblacion}\n")
+
+
     gen_amount = 0
     stats_gen = {}
     mejor_cerebro = None
@@ -56,12 +61,19 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
             if sin_mejora >= 20:  # 20 generaciones sin mejorar
                 sigma = min(1.5, sigma * 1.2)  # explora más amplio
                 sin_mejora = 0
-                print(f'  [sigma ajustado a {sigma:.3f}]')
+                text = f'  [sigma ajustado a {sigma:.3f}]'
+                with open("log.txt", "a", encoding="utf-8") as f:
+                    f.write(f"{text}\n")
+                print(text)
                 
+
                 # si sigma se fue muy alto, reiniciar desde el mejor cerebro
-                if sigma > 0.8:
-                    sigma = 0.15
-                    print(f'  [reset sigma → {sigma}]')
+                if sigma > 0.4:
+                    sigma = 0.05
+                    text = f'  [reset sigma → {sigma}]'
+                    with open("log.txt", "a", encoding="utf-8") as f:
+                        f.write(f"{text}\n")
+                    print(text)
                     cerebro_base = NeuralBrain.cargar("mejor_cerebro.json")
                     cerebros = [cerebro_base]
                     while len(cerebros) < poblacion:
@@ -73,7 +85,13 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
             gen_amount += 1
             stats_gen[f'{gen_amount*100}'] = 0
         stats_gen[f'{gen_amount*100}'] += resultados[0][1]
-        print(f'Gen {gen+1}/{generaciones} | Mejor: {resultados[0][1]:.1f} | Record: {mejor_fitness:.1f}')
+        
+        text = f'Gen {gen+1}/{generaciones} | Mejor: {resultados[0][1]:.1f} | Record: {mejor_fitness:.1f}'
+
+        with open("log.txt", "a", encoding="utf-8") as f:
+            f.write(f"{text}\n")
+        
+        print(text)
 
         #quedarse con los mejores (25%)
         n_elite = max(2,poblacion//4)
@@ -88,7 +106,10 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
     print(f'=======================================')
     print(f'Entrenamiento terminado. Record: {mejor_fitness:.1f}')
     for stat in stats_gen:
-        print(f'{stat}: {round(stats_gen[stat]/100,2)}')
+        text = f'{stat}: {round(stats_gen[stat]/100,2)}'
+        with open("log.txt", "a", encoding="utf-8") as f:
+            f.write(f"{text}\n")
+        print(text)
     
     return mejor_cerebro
 
@@ -147,5 +168,5 @@ print(f'fitness de un cerebro random: {score:.2f}')"""
 
 
 #probar el entrenamiento
-mejor = entrenar(generaciones=500, poblacion=50, dias=50)
+mejor = entrenar(generaciones=1500, poblacion=100, dias=50)
 print(f"Cerebro entrenado: {mejor}")
