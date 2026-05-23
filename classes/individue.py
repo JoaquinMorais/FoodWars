@@ -90,3 +90,5 @@ class Individues():
         x = random.uniform(-self.mutation_rate, self.mutation_rate) * random.randint(1,max_amount)
         return actual_amount*(1+x)
 
+    def add_food(self,n:int):
+        self.food += n

@@ -7,6 +7,9 @@ from classes.races.bee import Bee
 from classes.races.mimic import Mimic
 from classes.races.dog import Dog
 from classes.races.viltrumite import Viltrumite
+from classes.races.comunist import Comunist
+from classes.races.neural import Neural
+
 
 __all__ = [
     "Predator",
@@ -18,5 +21,7 @@ __all__ = [
     "Bee",
     "Mimic",
     "Dog",
-    "Viltrumite"
+    "Viltrumite",
+    "Comunist",
+    "Neural"
 ]

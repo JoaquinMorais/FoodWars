@@ -26,7 +26,9 @@ class Game():
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee(), Mimic(), Dog(), Viltrumite()]
+        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee(), Mimic(), 
+                      Dog(), Viltrumite(), Comunist()]
+        Comunist.total_comunists = 0
 
         # MATRIZ DE RESULTADOS
         self.rules = {
@@ -85,13 +87,13 @@ class Game():
                 continue
 
             elif ind2 is None:
-                ind1.food += self.fruits
+                ind1.add_food(self.fruits)
                 self.individues += [ind1]
 
             else:
                 result = self.fight(ind1.action(other = ind2), ind2.action(other = ind1))
-                ind1.food += result[0]
-                ind2.food += result[1]
+                ind1.add_food(result[0])
+                ind2.add_food(result[1])
                 self.individues += [ind1, ind2]
         self.individues += individues_actives
 
