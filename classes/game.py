@@ -54,13 +54,14 @@ class Game():
             self.fruits * result[1]
         )
     
-    def simulate_one_day(self):
+    def simulate_one_day(self, do_graph = False):
         individues_actives = self.individues.copy()
         self.individues = []
         random.shuffle(individues_actives)
 
         final_trees = {x:[None,None] for x in range(self.trees)}
-        free_trees = [x for x in range(self.trees)]
+        free_trees = set(range(self.trees))
+
 
         #pelear por la comida
         while individues_actives:
@@ -69,14 +70,14 @@ class Game():
             if len(free_trees) == 0:
                 break
 
-            tree = random.choice(free_trees)
+            tree = random.choice(tuple(free_trees))
 
             if final_trees[tree][0] is None:
                 final_trees[tree][0] = individue
 
             else:
                 final_trees[tree][1] = individue
-                free_trees.remove(tree)
+                free_trees.discard(tree)
 
 
         for tree in final_trees:
@@ -113,21 +114,22 @@ class Game():
 
         self.individues = new_population
         
-        race_count = Counter(
-            individue.name
-            for individue in self.individues
-        )
+        if do_graph:
+            race_count = Counter(
+                individue.name
+                for individue in self.individues
+            )
 
-        race_colors = {}
+            race_colors = {}
 
-        for individue in self.individues:
-            race_colors[individue.name] = individue.color
+            for individue in self.individues:
+                race_colors[individue.name] = individue.color
 
 
-        self.history.append({
-            "count": race_count,
-            "colors": race_colors
-        })
+            self.history.append({
+                "count": race_count,
+                "colors": race_colors
+            })
 
     def graph(self, start=0, end=None, smoothed=False):
         if end is None:
@@ -197,7 +199,7 @@ class Game():
                 if cant.isnumeric():
                     cant = int(cant)
                     for i in range(cant):
-                        self.simulate_one_day()
+                        self.simulate_one_day(do_graph=True)
                     self.day += cant
                     self.graph(start=initial_day)
             elif n == '2':

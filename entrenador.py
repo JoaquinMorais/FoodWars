@@ -13,10 +13,10 @@ razas = [
     Comunist()
 ]
 
-def entrenar(generaciones:int, poblacion:int, dias:int):
+def entrenar(generaciones:int, poblacion:int, dias:int, path = 'archivo.txt', path_log = 'log.txt'):
     #poblacion inicial random
-    if os.path.exists("mejor_cerebro.json"):
-        cerebro = NeuralBrain.cargar("mejor_cerebro.json")
+    if os.path.exists(path):
+        cerebro = NeuralBrain.cargar(path)
         print("Usando cerebro entrenado")
         cerebros = [cerebro]
         for _ in range(poblacion-1):
@@ -25,7 +25,7 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
     else:
         cerebros = [NeuralBrain().__class__() for _ in range(poblacion)]
 
-    with open("log.txt", "w", encoding="utf-8") as f:
+    with open(path_log, "w", encoding="utf-8") as f:
         f.write("Nuevo entrenamiento\n")
         f.write(f"Generaciones: {generaciones} - Poblacion: {poblacion}\n")
 
@@ -52,7 +52,7 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
         if resultados[0][1] > mejor_fitness:
             mejor_fitness = resultados[0][1]
             mejor_cerebro = resultados[0][0]
-            mejor_cerebro.guardar("mejor_cerebro.json")  # ← esto
+            mejor_cerebro.guardar(path)  # ← esto
             sin_mejora = 0       # reset del contador
             sigma = max(0.05, sigma * 0.7)  # afina un poco al mejorar
             #print(f"  *** Nuevo record, cerebro guardado ***")
@@ -62,7 +62,7 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
                 sigma = min(1.5, sigma * 1.2)  # explora más amplio
                 sin_mejora = 0
                 text = f'  [sigma ajustado a {sigma:.3f}]'
-                with open("log.txt", "a", encoding="utf-8") as f:
+                with open(path_log, "a", encoding="utf-8") as f:
                     f.write(f"{text}\n")
                 print(text)
                 
@@ -71,10 +71,10 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
                 if sigma > 0.4:
                     sigma = 0.05
                     text = f'  [reset sigma → {sigma}]'
-                    with open("log.txt", "a", encoding="utf-8") as f:
+                    with open(path_log, "a", encoding="utf-8") as f:
                         f.write(f"{text}\n")
                     print(text)
-                    cerebro_base = NeuralBrain.cargar("mejor_cerebro.json")
+                    cerebro_base = NeuralBrain.cargar(path)
                     cerebros = [cerebro_base]
                     while len(cerebros) < poblacion:
                         cerebros.append(cerebro_base.mutar(sigma=sigma))
@@ -88,7 +88,7 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
         
         text = f'Gen {gen+1}/{generaciones} | Mejor: {resultados[0][1]:.1f} | Record: {mejor_fitness:.1f}'
 
-        with open("log.txt", "a", encoding="utf-8") as f:
+        with open(path_log, "a", encoding="utf-8") as f:
             f.write(f"{text}\n")
         
         print(text)
@@ -107,7 +107,7 @@ def entrenar(generaciones:int, poblacion:int, dias:int):
     print(f'Entrenamiento terminado. Record: {mejor_fitness:.1f}')
     for stat in stats_gen:
         text = f'{stat}: {round(stats_gen[stat]/100,2)}'
-        with open("log.txt", "a", encoding="utf-8") as f:
+        with open(path_log, "a", encoding="utf-8") as f:
             f.write(f"{text}\n")
         print(text)
     
@@ -168,5 +168,7 @@ print(f'fitness de un cerebro random: {score:.2f}')"""
 
 
 #probar el entrenamiento
-mejor = entrenar(generaciones=1500, poblacion=100, dias=50)
-print(f"Cerebro entrenado: {mejor}")
+for i in range(25):
+    mejor = entrenar(generaciones=500, poblacion=150+i*2, dias=50,path = 'mejor_cerebro.json', path_log=f'log_cerebro_run{i+1}.txt')
+
+    print(f"Cerebro entrenado: {mejor}")
