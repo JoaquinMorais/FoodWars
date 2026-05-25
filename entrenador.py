@@ -168,7 +168,7 @@ print(f'fitness de un cerebro random: {score:.2f}')"""
 
 
 #probar el entrenamiento
-for i in range(25):
+for i in range(7):
     mejor = entrenar(generaciones=500, poblacion=150+i*2, dias=50,path = 'mejor_cerebro.json', path_log=f'log_cerebro_run{i+1}.txt')
 
     print(f"Cerebro entrenado: {mejor}")
