@@ -10,6 +10,14 @@ from classes.races.all import *
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
+if os.path.exists("brains/mejor_cerebro.json"):
+    cerebro = NeuralBrain.cargar("brains/mejor_cerebro.json")
+    print('CARGANDO CEREBRO')
+    import time
+    time.sleep(0.1)
+else:
+    cerebro = None
+
 class Game():
     def __init__(self,
         trees:int = 50, #Cuantos arboles hay
@@ -26,8 +34,20 @@ class Game():
         self.history = []
         self.day = 0
 
-        self.races = [Prey(), Predator(), Human(), Randomint(), Ant, Bee(), Mimic(), 
-                      Dog(), Viltrumite(), Comunist()]
+        
+        self.races = [
+            Prey(), Predator(), Human(), 
+            Randomint(), Ant, Bee(), Mimic(), 
+            Dog(), Viltrumite(), Comunist(),
+        ]
+        if cerebro:
+            self.races.append(
+                Neural(brain=cerebro.mutar())
+            )
+        else:
+            self.races.append(Neural())
+        
+
         Comunist.total_comunists = 0
 
         # MATRIZ DE RESULTADOS
@@ -220,10 +240,18 @@ class Game():
                             if cant >= 1:
                                 if race == 5:
                                     self.append_ant(cant)
+                                elif race == len(self.races):
+                                    for _ in range(cant):
+                                        if cerebro:
+                                            self.individues.append(
+                                                Neural(brain=cerebro.mutar())
+                                            )
+                                        else:
+                                            self.individues.append(Neural())
                                 elif race != 0:
                                     self.individues += [self.races[race-1].__class__() for x in range(cant)]
                                 else:
-                                    for j in self.races:
+                                    for j in self.races[:-1]:
                                         if j == Ant:
                                             self.append_ant(cant)
                                         else:

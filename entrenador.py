@@ -167,8 +167,12 @@ score = evaluar(brain, dias=50)
 print(f'fitness de un cerebro random: {score:.2f}')"""
 
 
+from datetime import datetime
+date = datetime.now().strftime("%Y:%m:%d-%H:%M")
+
+
 #probar el entrenamiento
 for i in range(7):
-    mejor = entrenar(generaciones=500, poblacion=150+i*2, dias=50,path = 'mejor_cerebro.json', path_log=f'log_cerebro_run{i+1}.txt')
+    mejor = entrenar(generaciones=500, poblacion=150+i*2, dias=50,path = 'brains/mejor_cerebro.json', path_log=f'logs/log_cerebro_run{i+1}_{date}.txt')
 
     print(f"Cerebro entrenado: {mejor}")
