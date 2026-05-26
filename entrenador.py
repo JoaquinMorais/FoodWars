@@ -40,10 +40,13 @@ def entrenar(generaciones:int, poblacion:int, dias:int, path = 'archivo.txt', pa
 
     for gen in range(generaciones):
         #evaluar cada cerebro
+        promedio = 0
         resultados = []
         for cerebro in cerebros:
             score = evaluar(cerebro, dias)
             resultados.append((cerebro,score))
+            promedio += score
+            
         
         #ordenar de mejor a peor
         resultados.sort(key=lambda x: x[1], reverse=True)
@@ -86,7 +89,7 @@ def entrenar(generaciones:int, poblacion:int, dias:int, path = 'archivo.txt', pa
             stats_gen[f'{gen_amount*100}'] = 0
         stats_gen[f'{gen_amount*100}'] += resultados[0][1]
         
-        text = f'Gen {gen+1}/{generaciones} | Mejor: {resultados[0][1]:.1f} | Record: {mejor_fitness:.1f}'
+        text = f'Gen {gen+1}/{generaciones} | Mejor: {resultados[0][1]:.1f} | Promedio: {round(promedio/len(cerebros),2)} | Record: {mejor_fitness:.1f}'
 
         with open(path_log, "a", encoding="utf-8") as f:
             f.write(f"{text}\n")
@@ -170,9 +173,8 @@ print(f'fitness de un cerebro random: {score:.2f}')"""
 from datetime import datetime
 date = datetime.now().strftime("%Y:%m:%d-%H:%M")
 
-
+os.makedirs(f"logs/{date}",exist_ok=True)
 #probar el entrenamiento
-for i in range(10):
-    mejor = entrenar(generaciones=500, poblacion=50+i*10, dias=50,path = 'brains/mejor_cerebro.json', path_log=f'logs/log_cerebro_run{i+1}_{date}.txt')
-
+for i in range(1):
+    mejor = entrenar(generaciones=100, poblacion=2000, dias=50,path = 'brains/mejor_cerebro.json', path_log=f"logs/{date}/log_cerebro_run{i+1}.txt")
     print(f"Cerebro entrenado: {mejor}")
