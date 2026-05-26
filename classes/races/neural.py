@@ -23,7 +23,7 @@ class Neural(Individues):
     def __init__(self, brain: NeuralBrain = None):
         super().__init__(
             reproduce=2.5,
-            eat_food=1.75,
+            eat_food=2,
             max_days_without_eating=2,
             number_children=1,
             color="#0FC8FF",

@@ -5,10 +5,10 @@ import random
 class Dog(Individues):
     def __init__(self):
         super().__init__(
-            reproduce= 4,
-            eat_food=2,
+            reproduce= 4.5,
+            eat_food=1.75,
             color = "#A14100",
-            number_children=random.randint(1,2)
+            number_children=random.randint(1,3)
         )
 
         self.name = "Dog"

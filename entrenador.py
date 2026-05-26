@@ -172,7 +172,7 @@ date = datetime.now().strftime("%Y:%m:%d-%H:%M")
 
 
 #probar el entrenamiento
-for i in range(7):
-    mejor = entrenar(generaciones=500, poblacion=150+i*2, dias=50,path = 'brains/mejor_cerebro.json', path_log=f'logs/log_cerebro_run{i+1}_{date}.txt')
+for i in range(10):
+    mejor = entrenar(generaciones=500, poblacion=50+i*10, dias=50,path = 'brains/mejor_cerebro.json', path_log=f'logs/log_cerebro_run{i+1}_{date}.txt')
 
     print(f"Cerebro entrenado: {mejor}")
